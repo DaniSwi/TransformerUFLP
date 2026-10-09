@@ -1,7 +1,4 @@
-# TransformerUFLP
-Transformer para el UFLP
-
-# Aprendizaje por imitación para el UFLP
+# Aprendizaje por imitación con Transformer para el UFLP
 
 Redes neuronales que aprenden a construir soluciones del **Uncapacitated Facility Location
 Problem** imitando las decisiones de un algoritmo de optimización tradicional.
