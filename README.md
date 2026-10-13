@@ -1,4 +1,4 @@
-# Aprendizaje por imitación con Transformer para el UFLP
+# Aprendizaje por imitación para el UFLP
 
 Redes neuronales que aprenden a construir soluciones del **Uncapacitated Facility Location
 Problem** imitando las decisiones de un algoritmo de optimización tradicional.
@@ -7,6 +7,7 @@ El proyecto recorre tres arquitecturas sobre el mismo problema y los mismos dato
 sobre el estado aplanado, un scorer equivariante a permutaciones, y un transformer
 encoder-decoder con puntero. Cada una corrige una limitación concreta de la anterior.
 
+**Universidad:** PUCV · Inteligencia Artificial y Optimización Heurística
 **Integrantes:** Carlos Abarza · Daniel Cornejo · Patricio Henriquez
 
 ---
@@ -71,18 +72,28 @@ exactamente 31 neuronas.
 
 ```
 .
-├── uflp/
-│   ├── instance.py        UFLP_Instance · generación de instancias euclidianas
-│   ├── state.py           UFLP_State · cachés best_cost / second_cost
-│   ├── environment.py     UFLP_Environment · acciones, deltas O(N), transiciones
-│   ├── agents.py          GreedyAgent · LocalSearchAgent · ILS · SingleAgentSolver
-│   ├── features.py        state2vec
-│   ├── data.py            descomposición de soluciones · generate_imitation_data
-│   └── models.py          UFLP_MLP · UFLP_Equivariante · UFLP_Attention
-├── notebooks/
-│   ├── 01_imitacion_mlp.ipynb       MLP aplanada + ajuste de hiperparámetros
-│   ├── 02_atencion_puntero.ipynb    encoder de atención + puntero con máscara
-│   └── 03_transformer_am.ipynb      encoder-decoder completo (en curso)
+├── uflp/                      el paquete
+│   ├── config.py              hiperparámetros, en un solo lugar
+│   ├── instance.py            UFLP_Instance · generación de instancias
+│   ├── state.py               UFLP_State · cachés best_cost / second_cost
+│   ├── environment.py         acciones, deltas O(N), transiciones
+│   ├── agents.py              Greedy Add · Hill Climbing · ILS · baseline aleatorio
+│   ├── exact.py               óptimo con un solver MIP (HiGHS)
+│   ├── experts.py             el experto a imitar, elegible por string
+│   ├── features.py            state2vec: el estado como matriz (M+1, 9)
+│   ├── data.py                descomposición de soluciones · dataset de imitación
+│   ├── model.py               encoder-decoder con puntero
+│   ├── train.py               ciclo de entrenamiento · early stopping · curvas
+│   ├── rollout.py             el modelo dentro del agente constructivo
+│   └── evaluate.py            benchmark · gaps · desempeño por tamaño
+├── scripts/
+│   ├── 01_generar_datos.py
+│   ├── 02_entrenar.py
+│   └── 03_evaluar.py
+├── docs/
+│   ├── informe_modulo1.pdf
+│   └── tarea5_diseno.pdf
+└── requirements.txt
 ```
 
 ---
@@ -198,10 +209,6 @@ representa la acción de parar y transporta la información global del estado. A
 en la misma softmax que las aperturas, sin necesidad de una cabeza de salida aparte, y la
 independencia del tamaño queda intacta.
 
-## Arquitectura del Transformer
-<img width="789" height="847" alt="image" src="https://github.com/user-attachments/assets/eaccfebb-e5f3-4ecc-9759-eb6b7d2904bc" />
-
-
 ---
 
 ## Dos diferencias con el paper original
@@ -227,23 +234,34 @@ cd <repo>
 pip install -r requirements.txt
 ```
 
-```python
-from uflp import random_instance, UFLP_State, greedy_add, solve_expert
+Tres pasos, en orden:
 
-inst = random_instance(M=30, N=200, rng=np.random.default_rng(0))
-
-g = greedy_add(inst)          # heurística clásica
-e = solve_expert(inst)        # Greedy Add → Hill Climbing → ILS
-
-print(g)                      # UFLP_State(|S|=11, Z=35.332)
-print(e)                      # UFLP_State(|S|=10, Z=33.779)
+```bash
+python scripts/01_generar_datos.py                    # ~4 min, guarda data/imitacion.pt
+python scripts/02_entrenar.py                         # guarda runs/modelo.pt y la curva
+python scripts/03_evaluar.py --sizes 5 10 20 50       # tabla + gráfico por tamaño
 ```
 
-Los notebooks corren de principio a fin en Colab sin instalar nada fuera de lo que ya trae.
-Cada uno expone una constante `FAST` al inicio para reducir el dataset y correr en pocos
-minutos mientras se itera.
+Cada script acepta `--help`. Lo más útil:
 
----
+```bash
+python scripts/01_generar_datos.py --expert exact     # el óptimo como experto
+python scripts/02_entrenar.py --select-by rollout_gap # selecciona por gap, no por loss
+python scripts/03_evaluar.py --multistart 32          # muestrea 32 construcciones
+```
+
+Y como librería:
+
+```python
+import numpy as np
+from uflp import random_instance, greedy_add, solve_expert, solve_exact
+
+inst = random_instance(M=20, N=200, rng=np.random.default_rng(0))
+
+print(greedy_add(inst))      # UFLP_State(|S|=7, Z=43.784)
+print(solve_expert(inst))    # UFLP_State(|S|=6, Z=42.136)
+print(solve_exact(inst))     # UFLP_State(|S|=6, Z=42.136)
+```
 
 ## Estado
 
@@ -281,4 +299,3 @@ heurística voraz, y sobre el cual una búsqueda local converge en menos iteraci
 - Zaheer, M. et al. (2017). *Deep Sets.* NeurIPS 30.
 - Ross, S., Gordon, G. & Bagnell, D. (2011). *A reduction of imitation learning and structured prediction to no-regret online learning* (DAgger). AISTATS.
 - Vinyals, O., Fortunato, M. & Jaitly, N. (2015). *Pointer Networks.* NeurIPS 28.
-
