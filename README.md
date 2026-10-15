@@ -7,8 +7,8 @@ El proyecto recorre tres arquitecturas sobre el mismo problema y los mismos dato
 sobre el estado aplanado, un scorer equivariante a permutaciones, y un transformer
 encoder-decoder con puntero. Cada una corrige una limitación concreta de la anterior.
 
-**Universidad:** PUCV · Inteligencia Artificial y Optimización Heurística
 **Integrantes:** Carlos Abarza · Daniel Cornejo · Patricio Henriquez
+**OII462-1 2026 Aprendiendo a optimizar: Aprendizaje automático para problemas combinatorios**
 
 ---
 
