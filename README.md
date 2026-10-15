@@ -8,6 +8,7 @@ sobre el estado aplanado, un scorer equivariante a permutaciones, y un transform
 encoder-decoder con puntero. Cada una corrige una limitación concreta de la anterior.
 
 **Integrantes:** Carlos Abarza · Daniel Cornejo · Patricio Henriquez
+
 **OII462-1 2026 Aprendiendo a optimizar: Aprendizaje automático para problemas combinatorios**
 
 ---
