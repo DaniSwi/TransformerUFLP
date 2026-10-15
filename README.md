@@ -229,8 +229,13 @@ un rollout completo toma ~14 ms contra ~140 ms del ILS.
 ## Uso
 
 ```bash
+<<<<<<< HEAD
 git clone https://github.com/<usuario>/<repo>.git
 cd <repo>
+=======
+git clone https://github.com/DaniSwi/TransformerUFLP.git
+cd transfomeruflp
+>>>>>>> 309dacaeb92babb76ce9ba7fff3227a2ebd4923c
 pip install -r requirements.txt
 ```
 
