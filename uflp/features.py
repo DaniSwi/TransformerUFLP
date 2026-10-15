@@ -29,6 +29,12 @@ C_MEJOR = 8       # global  el mejor ΔZ entre las cerradas
 COLUMN_NAMES = ("es_stop", "costo_fijo", "dist_media", "ahorro", "delta_z",
                 "es_ultima", "no_valida", "avance", "mejor_delta")
 
+# Partición estática / dinámica de las columnas. La usa la variante
+# UFLP_AttentionEstatico: las tres primeras no dependen del estado parcial, así
+# que su embedding se puede calcular una vez por instancia y reutilizar.
+COLS_ESTATICAS = (C_STOP, C_COSTO, C_DIST)
+COLS_DINAMICAS = (C_AHORRO, C_DELTA, C_ULTIMA, C_MASCARA, C_AVANCE, C_MEJOR)
+
 ROLES = {
     "es_stop": "flag", "costo_fijo": "propia", "dist_media": "propia",
     "ahorro": "relativa", "delta_z": "relativa", "es_ultima": "flag",

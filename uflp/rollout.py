@@ -34,9 +34,20 @@ def solve_with_model(inst: UFLP_Instance, model, device: str = "cpu",
     state = UFLP_State(inst)
     ultima = None
 
+    # La variante de encoder estático calcula los embeddings una sola vez y los
+    # reutiliza en todos los pasos; el modelo base no puede (su encoder lee
+    # columnas que cambian).
+    cachea = hasattr(model, "encode_static")
+    h_est = None
+
     for _ in range(M):                      # cota dura: nunca más de M aperturas
         x = torch.from_numpy(state2vec(state, ultima)).unsqueeze(0).to(device)
-        logits = model(x)[0]
+        if cachea:
+            if h_est is None:
+                h_est = model.encode_static(x)
+            logits = model(x, h_est=h_est)[0]
+        else:
+            logits = model(x)[0]
 
         if sample:
             probs = torch.softmax(logits, dim=-1)

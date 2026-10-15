@@ -14,7 +14,7 @@ exact        óptimo con un solver MIP
 experts      el experto a imitar, elegible por string
 features     state2vec: el estado como matriz (M+1, 9)
 data         descomposición de soluciones y dataset de imitación
-model        encoder-decoder con puntero
+model        encoder-decoder con puntero (dos variantes)
 train        ciclo de entrenamiento con early stopping
 rollout      el modelo dentro del agente constructivo
 evaluate     benchmark, gaps y desempeño por tamaño
@@ -30,9 +30,10 @@ from .evaluate import (benchmark, evaluate_by_size, format_table, make_methods,
                        plot_by_size)
 from .exact import solve_exact
 from .experts import solve_expert
-from .features import COLUMN_NAMES, VEC_LEN, describe, state2vec
+from .features import (COLS_DINAMICAS, COLS_ESTATICAS, COLUMN_NAMES,
+                       VEC_LEN, describe, state2vec)
 from .instance import UFLP_Instance, random_instance, random_instances
-from .model import UFLP_Attention
+from .model import UFLP_Attention, UFLP_AttentionEstatico
 from .rollout import rollout_costs, solve_multistart, solve_with_model
 from .state import UFLP_State
 from .train import History, plot_history, train
@@ -46,10 +47,12 @@ __all__ = [
     "GreedyAgent", "LocalSearchAgent", "SingleAgentSolver", "ILS",
     "evalConstructiveActions", "greedy_add", "hill_climbing",
     "random_constructive", "solve_exact", "solve_expert",
-    "VEC_LEN", "COLUMN_NAMES", "state2vec", "describe",
+    "VEC_LEN", "COLUMN_NAMES", "COLS_ESTATICAS", "COLS_DINAMICAS",
+    "state2vec", "describe",
     "decompose", "generate_imitation_data", "build_datasets",
     "save_datasets", "load_datasets",
-    "UFLP_Attention", "train", "History", "plot_history",
+    "UFLP_Attention", "UFLP_AttentionEstatico",
+    "train", "History", "plot_history",
     "solve_with_model", "solve_multistart", "rollout_costs",
     "make_methods", "benchmark", "format_table", "evaluate_by_size",
     "plot_by_size",

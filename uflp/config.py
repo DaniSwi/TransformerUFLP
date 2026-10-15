@@ -41,6 +41,8 @@ class ModelConfig:
     d_ff: int = 512                 # 4 x d
     dropout: float = 0.1
     clip_c: float = 10.0            # C del tanh en el puntero
+    d_dinamico: int = 64            # sólo UFLP_AttentionEstatico: ancho
+                                    # del embedding de lo que cambia
 
 
 @dataclass(frozen=True)

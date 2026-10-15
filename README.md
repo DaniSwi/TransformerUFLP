@@ -7,9 +7,8 @@ El proyecto recorre tres arquitecturas sobre el mismo problema y los mismos dato
 sobre el estado aplanado, un scorer equivariante a permutaciones, y un transformer
 encoder-decoder con puntero. Cada una corrige una limitación concreta de la anterior.
 
+**Universidad:** PUCV · Inteligencia Artificial y Optimización Heurística
 **Integrantes:** Carlos Abarza · Daniel Cornejo · Patricio Henriquez
-
-**Aprendiendo a Optimizar: Aprendizaje autómatico para Optimización Combinatoria OII462-1 2026**
 
 ---
 
@@ -91,6 +90,9 @@ exactamente 31 neuronas.
 │   ├── 01_generar_datos.py
 │   ├── 02_entrenar.py
 │   └── 03_evaluar.py
+├── docs/
+│   ├── informe_modulo1.pdf
+│   └── tarea5_diseno.pdf
 └── requirements.txt
 ```
 
@@ -227,7 +229,7 @@ un rollout completo toma ~14 ms contra ~140 ms del ILS.
 ## Uso
 
 ```bash
-git clone https://github.com/DaniSwi/TransformerUFLP.git
+git clone https://github.com/<usuario>/<repo>.git
 cd <repo>
 pip install -r requirements.txt
 ```
